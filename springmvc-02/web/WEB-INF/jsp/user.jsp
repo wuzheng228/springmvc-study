@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
-  User: 76973
-  Date: 2021/4/22
-  Time: 20:57
+  User: wuzheng001
+  Date: 2021/4/23
+  Time: 13:02
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -11,9 +11,8 @@
     <title>Title</title>
 </head>
 <body>
-<p><%=request.getAttribute("rkey")%></p>
-<p><%=session.getAttribute("skey")%></p>
-<p>${success}</p>
-登录页面
+user:
+<p>${user.name}</p>
+<p>${user.password}</p>
 </body>
 </html>
