@@ -10,14 +10,30 @@
        https://www.springframework.org/schema/mvc/spring-mvc.xsd">
     <context:component-scan base-package="com.zzspace.web"/>
     <mvc:default-servlet-handler/>
+    <!--开启springMVC框架注解的支持,增加类型转换器，使其生效-->
     <mvc:annotation-driven/>
-
     <!-- 允许css目录下的所有文件可见 -->
 <!--    <mvc:resources location="/css/" mapping="/css/**" />-->
 <!--    &lt;!&ndash; 允许html目录下的所有文件可见 &ndash;&gt;-->
 <!--    <mvc:resources location="/html/" mapping="/html/**" />-->
 <!--    &lt;!&ndash; 允许css目录下的所有文件可见 &ndash;&gt;-->
 <!--    <mvc:resources location="/images/" mapping="/images/**" />-->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="com.zzspace.converter.GoodsConverter" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="conversionService2" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="formatters">
+            <list>
+                <bean class="com.zzspace.formatter.DateFormatter" />
+            </list>
+        </property>
+    </bean>
+
 
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="internalResourceViewResolver">

@@ -1,0 +1,64 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <context:component-scan base-package="com.zzspace.web"/>
+    <mvc:default-servlet-handler/>
+    <!--开启springMVC框架注解的支持,增加类型转换器，使其生效-->
+
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!-- 配置拦截器作用的路径 -->
+            <mvc:mapping path="/hello" />
+            <!-- 定义在<mvc: interceptor>元素中，表示匹配指定路径的请求才进行拦截 -->
+            <bean class="com.zzspace.intercepter.MyIntercepter" />
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/hello"/>
+            <bean class="com.zzspace.intercepter.MyIntecepter1" />
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.zzspace.intercepter.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>/WEB-INF/resource/errorMessages.properties</value>
+            </list>
+        </property>
+        <!-- 资源文件编码格式 -->
+        <property name="fileEncodings" value="utf-8" />
+        <!-- 对资源文件内容缓存的时间，单位为秒 -->
+        <property name="cacheSeconds" value="120" />
+    </bean>
+
+    <!-- 注册校验器 -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <!-- hibernate 校验器 -->
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+        <!-- 指定校验使用的资源文件，在文件中配置校验错误信息，如果不指定则默认使用 classpath下的 ValidationMessages.properties -->
+        <property name="validationMessageSource" ref="messageSource" />
+    </bean>
+    <mvc:annotation-driven/>
+
+    <!-- 允许css目录下的所有文件可见 -->
+<!--    <mvc:resources location="/css/" mapping="/css/**" />-->
+<!--    &lt;!&ndash; 允许html目录下的所有文件可见 &ndash;&gt;-->
+<!--    <mvc:resources location="/html/" mapping="/html/**" />-->
+<!--    &lt;!&ndash; 允许css目录下的所有文件可见 &ndash;&gt;-->
+<!--    <mvc:resources location="/images/" mapping="/images/**" />-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="internalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+</beans>
