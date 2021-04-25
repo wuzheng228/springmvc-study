@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -18,12 +19,16 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping("/login")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(@Valid User user, BindingResult result, Model model, HttpSession session) {
         if(result.hasErrors()){
+            StringBuffer buffer = new StringBuffer();
             for (ObjectError error : result.getAllErrors()) {
                 System.out.println(error.getDefaultMessage());
+                buffer.append(error.getDefaultMessage());
             }
+            model.addAttribute("msg", buffer.toString());
+            return "login";
         }
         if (user.getName().equals("zz") && user.getPswd().equals("123")) {
             model.addAttribute(user);

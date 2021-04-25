@@ -267,6 +267,8 @@ Spring MVC 的 Converter 和 Formatter 在进行类型转换时是将输入数�
     <!-- 指定校验使用的资源文件，在文件中配置校验错误信息，如果不指定则默认使用 classpath下的 ValidationMessages.properties -->
     <property name="validationMessageSource" ref="messageSource" />
 </bean>
+
+<mvc:annotation-driven validator="validator"/>
 ```
 3.标注类型
 
@@ -315,6 +317,42 @@ private Date gdate;
 @Range(min=10,max=100,message="{gprice.invalid}")
 private double gprice;
 ```
+例子：
+
+修改User类，给name属性加上注解
+```java
+    @Length(min = 2,max = 4, message = "{error.name.length}")
+    String name;
+```
+修改LoginController,对需要校验的形参加上`@Valid`注解，并在之后加上`BindingResult result`
+```java
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String login(@Valid User user, BindingResult result, Model model, HttpSession session) {
+        if(result.hasErrors()){
+        StringBuffer buffer = new StringBuffer();
+        for (ObjectError error : result.getAllErrors()) {
+        System.out.println(error.getDefaultMessage());
+        buffer.append(error.getDefaultMessage());
+        }
+        model.addAttribute("msg", buffer.toString());
+        return "login";
+        }
+        if (user.getName().equals("zz") && user.getPswd().equals("123")) {
+        model.addAttribute(user);
+        session.setAttribute("user", user);
+        return "main";
+        } else {
+        model.addAttribute("msg", "用户名密码错误");
+        return "login";
+        }
+        }
+```
+测试:
+
+访问:`http://localhost:8080/springmvc_05_war_exploded/toLogin`
+
+输入长度在[2, 4]之外的name
+
 
 
 
