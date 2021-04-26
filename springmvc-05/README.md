@@ -270,6 +270,7 @@ Spring MVC 的 Converter 和 Formatter 在进行类型转换时是将输入数�
 
 <mvc:annotation-driven validator="validator"/>
 ```
+
 3.标注类型
 
  **空检查**
@@ -352,6 +353,40 @@ private double gprice;
 访问:`http://localhost:8080/springmvc_05_war_exploded/toLogin`
 输入长度在[2, 4]之外的name
 
+例子:
+
+给User实体类加上注解:
+```java
+    @Length(min = 2,max = 4, message = "{error.name.length}")
+    String name;
+    String pswd;
+```
+
+修改LoginController
+```java
+    @RequestMapping("/login")
+        public String login(@Valid User user, BindingResult result, Model model, HttpSession session) {
+            if(result.hasErrors()){
+                StringBuffer buffer = new StringBuffer();
+                for (ObjectError error : result.getAllErrors()) {
+                    System.out.println(error.getDefaultMessage());
+                    buffer.append(error.getDefaultMessage());
+                    buffer.append("/n");
+                }
+                model.addAttribute("msg", buffer.toString());
+                return "login";
+            }
+            if (user.getName().equals("zz") && user.getPswd().equals("123")) {
+                model.addAttribute(user);
+                session.setAttribute("user", user);
+                return "main";
+            } else {
+                model.addAttribute("msg", "用户名密码错误");
+                return "login";
+            }
+        }
+```
+需要验证的参数加上`@Valid`注解，并且在该参数后加上`BindingResult result`, 从`result`中可以拿到是否有参数错误。
 
 
 
