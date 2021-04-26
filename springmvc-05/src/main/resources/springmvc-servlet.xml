@@ -42,7 +42,7 @@
     </bean>
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="WEB-INF/resource/errorMessages"/>
+        <property name="basename" value="classpath:ValidationMessages.properties"/>
         <!-- 资源文件编码格式 -->
         <property name="defaultEncoding" value="utf-8" />
         <!-- 对资源文件内容缓存的时间，单位为秒 -->

@@ -350,7 +350,6 @@ private double gprice;
 测试:
 
 访问:`http://localhost:8080/springmvc_05_war_exploded/toLogin`
-
 输入长度在[2, 4]之外的name
 
 
